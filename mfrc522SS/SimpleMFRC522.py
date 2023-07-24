@@ -11,6 +11,7 @@ class SimpleMFRC522:
   BLOCK_ADDRS = [8, 9, 10]
   
   def __init__(self):
+    self.running = True
     self.READER = MFRC522()
   
   def read(self):
@@ -35,26 +36,27 @@ class SimpleMFRC522:
       return self.uid_to_num(uid)
   
   def read_no_block(self):
-    (status, TagType) = self.READER.MFRC522_Request(self.READER.PICC_REQIDL)
-    if status != self.READER.MI_OK:
-        return None, None
-    (status, uid) = self.READER.MFRC522_Anticoll()
-    if status != self.READER.MI_OK:
-        return None, None
-    id = self.uid_to_num(uid)
-    self.READER.MFRC522_SelectTag(uid)
-    status = self.READER.MFRC522_Auth(self.READER.PICC_AUTHENT1A, 11, self.KEY, uid)
-    data = []
-    text_read = ''
-    if status == self.READER.MI_OK:
-        for block_num in self.BLOCK_ADDRS:
-            block = self.READER.MFRC522_Read(block_num) 
-            if block:
-            		data += block
-        if data:
-             text_read = ''.join(chr(i) for i in data)
-    self.READER.MFRC522_StopCrypto1()
-    return id, text_read
+      while self.running:
+          (status, TagType) = self.READER.MFRC522_Request(self.READER.PICC_REQIDL)
+          if status != self.READER.MI_OK:
+              return None, None
+          (status, uid) = self.READER.MFRC522_Anticoll()
+          if status != self.READER.MI_OK:
+              return None, None
+          id = self.uid_to_num(uid)
+          self.READER.MFRC522_SelectTag(uid)
+          status = self.READER.MFRC522_Auth(self.READER.PICC_AUTHENT1A, 11, self.KEY, uid)
+          data = []
+          text_read = ''
+          if status == self.READER.MI_OK:
+              for block_num in self.BLOCK_ADDRS:
+                  block = self.READER.MFRC522_Read(block_num) 
+                  if block:
+                  		data += block
+              if data:
+                   text_read = ''.join(chr(i) for i in data)
+          self.READER.MFRC522_StopCrypto1()
+          return id, text_read
     
   def write(self, text):
       id, text_in = self.write_no_block(text)
