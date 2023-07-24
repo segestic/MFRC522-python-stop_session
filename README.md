@@ -6,7 +6,7 @@ This code was published in relation to a [blog post](https://pimylifeup.com/rasp
 
 ## Installation
 
-pip install git+https://github.com/segestic/MFRC522-python-stop_session.git
+pip3 install git+https://github.com/segestic/MFRC522-python-stop_session.git
 
 Until the package is on PyPi, clone this repository and run `python setup.py install` in the top level directory.
 
