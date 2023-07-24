@@ -2,6 +2,7 @@
 
 from . import MFRC522
 import RPi.GPIO as GPIO
+import time
   
 class SimpleMFRC522:
 
@@ -20,20 +21,34 @@ class SimpleMFRC522:
           id, text = self.read_no_block()
       return id, text
 
-  def read_id(self):
-    id = self.read_id_no_block()
-    while not id:
-      id = self.read_id_no_block()
-    return id
+  
+#read it takes a parameter - time in seconds
+  def read_id(self, time_in_seconds):
+      id = self.read_id_no_block(time_in_seconds)
+      while not id:
+          id = self.read_id_no_block(time_in_seconds)
+      return id
 
-  def read_id_no_block(self):
-      (status, TagType) = self.READER.MFRC522_Request(self.READER.PICC_REQIDL)
-      if status != self.READER.MI_OK:
-          return None
-      (status, uid) = self.READER.MFRC522_Anticoll()
-      if status != self.READER.MI_OK:
-          return None
-      return self.uid_to_num(uid)
+  def read_id_no_block(self, time_in_seconds):
+      start_time = time.time()
+      while time.time() - start_time <= time_in_seconds:
+          (status, TagType) = self.READER.MFRC522_Request(self.READER.PICC_REQIDL)
+          if status != self.READER.MI_OK:
+              continue
+          (status, uid) = self.READER.MFRC522_Anticoll()
+          if status != self.READER.MI_OK:
+              continue
+          return self.uid_to_num(uid)
+      return None
+    
+  # def read_id_no_block(self):
+  #     (status, TagType) = self.READER.MFRC522_Request(self.READER.PICC_REQIDL)
+  #     if status != self.READER.MI_OK:
+  #         return None
+  #     (status, uid) = self.READER.MFRC522_Anticoll()
+  #     if status != self.READER.MI_OK:
+  #         return None
+  #     return self.uid_to_num(uid)
   
   def read_no_block(self):
       while self.running:
