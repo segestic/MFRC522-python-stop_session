@@ -85,6 +85,13 @@ class SimpleMFRC522:
       
   def uid_to_num(self, uid):
       n = 0
+
+  #stop session added. to current stop a reading session without card scanning...
+
+  def stop_session(self):
+      self.READER.MFRC522_StopCrypto1()
+      return True
+
       for i in range(0, 5):
           n = n * 256 + uid[i]
       return n
