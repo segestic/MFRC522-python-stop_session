@@ -91,6 +91,7 @@ class SimpleMFRC522:
   
   #stop session added. to current stop a reading session without card scanning...
   def stop_session(self):
+      self.running = False  # Set the flag to stop the RFID session
       self.READER.MFRC522_StopCrypto1()
       return True
 
