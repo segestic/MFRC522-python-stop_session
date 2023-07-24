@@ -6,6 +6,8 @@ This code was published in relation to a [blog post](https://pimylifeup.com/rasp
 
 ## Installation
 
+pip install git+https://github.com/segestic/MFRC522-python-stop_session.git
+
 Until the package is on PyPi, clone this repository and run `python setup.py install` in the top level directory.
 
 ## Example Code
@@ -25,6 +27,7 @@ try:
         print("ID: %s\nText: %s" % (id,text))
         sleep(5)
 except KeyboardInterrupt:
-    GPIO.cleanup()
+    reader.stop_session()
+    #GPIO.cleanup()
     raise
 ```
