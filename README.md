@@ -17,7 +17,7 @@ The following code will read a tag from the MFRC522
 ```python
 from time import sleep
 import sys
-from mfrc522 import SimpleMFRC522
+from mfrc522-SS import SimpleMFRC522
 reader = SimpleMFRC522()
 
 try:
