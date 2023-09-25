@@ -58,6 +58,7 @@ class SimpleMFRC522:
           (status, uid) = self.READER.MFRC522_Anticoll()
           if status != self.READER.MI_OK:
               return None, None
+          print ('UID before conversion to demcimal is ', uid)
           id = self.uid_to_num(uid)
           self.READER.MFRC522_SelectTag(uid)
           status = self.READER.MFRC522_Auth(self.READER.PICC_AUTHENT1A, 11, self.KEY, uid)
